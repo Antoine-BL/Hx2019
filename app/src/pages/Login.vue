@@ -54,6 +54,7 @@
     justify-content: center;
     width: 100%;
     height: 95vh;
+    max-width: 500px;
   }
 
   .container-center > div {
