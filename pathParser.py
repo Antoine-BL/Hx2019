@@ -39,10 +39,9 @@ class pathData :
                 distance = dist
         return coordinate
 
-    def makePath(self, coord1, coord2):
+    def makePath(self, startingPoint, finalPoint):
         path = []
-        finalPoint = self.findCLosestPathCoordinate(coord2)
-        for direction in self.findClosestPath(coord1):
+        for direction in startingPoint:
 
             segment = direction
             nextPath = segment['endPoint']
@@ -50,10 +49,20 @@ class pathData :
                 path.append(segment['id'])
                 if len(self.mapData[nextPath]) < 2:
                     break
-                for p in self.mapData[nextPath]:
-                    if p['id'] not in path:
-                        segment = p
-                        break
+                if len(self.mapData[nextPath]) > 2:
+                    tempSegment = []
+                    for p in self.mapData[nextPath]:
+                        if p['id'] not in path:
+                            tempSegment.append(p)
+
+                    tempPath = self.makePath(tempSegment, finalPoint)
+                    if tempPath :
+                        return path + tempPath
+                else :
+                    for p in self.mapData[nextPath]:
+                        if p['id'] not in path:
+                            segment = p
+                            break
                 nextPath = segment['endPoint']
             if nextPath == finalPoint :
                 break
@@ -69,4 +78,4 @@ map = pathData('montreal.json')
 point1 = map.roundedCoord([-73.96219789981842, 45.41612831487927])
 point2 = map.roundedCoord([-73.9369797706604, 45.44953407110633])
 point3 = map.roundedCoord([-73.83718013763428, 45.42866626130953])
-print (map.makePath(point1, point3))
+print (map.makePath(map.findClosestPath(point1), map.findCLosestPathCoordinate(point3)))
