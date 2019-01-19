@@ -39,17 +39,24 @@ class pathData :
 
     def makePath(self, coord1, coord2):
         path = []
-        segment = self.findClosestPath(coord1)[0]
-        nextPath = segment['endPoint']
-        while (nextPath != self.findCLosestPathCoordinate(coord2) or nextPath == None):
-            path.append(segment['id'])
-            if len(self.mapData[nextPath]) < 2:
-                break
-            for p in self.mapData[nextPath]:
-                if p['id'] not in path:
-                    segment = p
-                    break
+        finalPoint = self.findCLosestPathCoordinate(coord2)
+        for direction in self.findClosestPath(coord1):
+
+            segment = direction
             nextPath = segment['endPoint']
+            while (nextPath != finalPoint or nextPath == None):
+                path.append(segment['id'])
+                if len(self.mapData[nextPath]) < 2:
+                    break
+                for p in self.mapData[nextPath]:
+                    if p['id'] not in path:
+                        segment = p
+                        break
+                nextPath = segment['endPoint']
+            if nextPath == finalPoint :
+                break
+            else :
+                path.clear()
         return path
         
 
@@ -58,6 +65,4 @@ class pathData :
 map = pathData('montreal.json')
 point1 = (-73.96219789981842, 45.41612831487927)
 point2 = (-73.9369797706604, 45.44953407110633)
-print (map.findClosestPath(point1))
-print (map.findClosestPath(point2))
 print (map.makePath(point1, point2))
