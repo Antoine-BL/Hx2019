@@ -139,6 +139,22 @@ def createGroup():
             
     return 'group created'
 
+@app.route("/api/getmygroups", methods=['GET'])
+@login_required
+def getmygroups():
+    myGroups = []
+    with open('./database/groups.json', 'r') as file:
+        data = json.load(file)
+        for group in data:
+            if group['creator'] == current_user.id :
+                myGroups.append(group)
+            else :
+                for member in group['members']:
+                    if member == current_user.id :
+                        myGroups.append(group)
+            
+    return json.dumps(myGroups)
+
 
 @app.route("/api/google/<string:lat>/<string:lon>", methods=['GET'])
 def google(lat, lon):
