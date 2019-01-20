@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "creator": "antoine.brassard@gmail.com",
+        "members": [
+            "antoine.brassard@gmail.com"
+        ],
+        "date": "2010/09/11/ 10:20"
+    },
+    {
+        "id": 2,
+        "creator": "antoine.brassard@gmail.com",
+        "members": [
+            "antoine.brassard@gmail.com"
+        ],
+        "date": "2020/09/11 10:20"
+    }
+    ,
+    {
+        "id": 3,
+        "creator": "antoine.brassard@gmail.com",
+        "members": [
+            "antoine.brassard@gmail.com"
+        ],
+        "date": "2019/01/21 10:20"
+    }
+]
