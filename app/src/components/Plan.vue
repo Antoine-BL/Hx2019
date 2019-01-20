@@ -39,6 +39,11 @@
     <div v-if="showMap" class="row">
       <div class="col">
         <div class="row">
+          <div class="col d-flex align-items-end justify-content-start">
+            <b-button class="bg-light circle-btn rounded-circle text-dark">
+              <font-awesome-icon v-on:click="addMarker" icon="plus"/>
+            </b-button>
+          </div>
           <div class="col d-flex align-items-end justify-content-end">
             <b-button class="bg-transparent border-0 p-0">
               <font-awesome-icon v-on:click="toggleMap" icon="window-close"/>
@@ -64,6 +69,13 @@
         </b-button>
       </div>
     </div>
+    <div class="row">
+      <div class="col d-flex justify-content-center">
+        <b-button v-on:click="sauvegarderPlan" variant="success" class="circle-btn rounded-circle" v-on:click="toggleMap()" variant="light">
+          Sauvegarder
+        </b-button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -85,7 +97,12 @@
           mapTypeControl: false,
           zoomControl: false,
           fullscreenControl: false,
-        }
+        },
+        map: null,
+        markers: [],
+        directionsService: null,
+        directionsDisplay: null,
+        mapReady: false,
       }
     },
     mounted() {
@@ -108,27 +125,86 @@
       },
       toggleEdit() {
         this.editingTitle = !this.editingTitle;
-        if (this.editingTitle) {
-          this.plan.titre = '';
-        }
       },
       toggleMap() {
         this.showMap = !this.showMap;
+
+        if (!this.showMap) return;
 
         this.$forceUpdate();
         setTimeout(() => {
           if (this.showMap) {
             this.$refs.mapRef.$mapPromise.then((map) => {
+              this.map = map;
               map.panTo(this.position);
 
               bikeLayer = new this.google.maps.BicyclingLayer();
               const bikeToggleDiv = document.createElement('div');
-              const bikeToggle = new BikeOverlayControl(bikeToggleDiv, map);
+              new BikeOverlayControl(bikeToggleDiv, map);
+
+              this.directionsService = new google.maps.DirectionsService;
+              this.directionsDisplay = new google.maps.DirectionsRenderer({
+                draggable: true,
+                map: map,
+                panel: document.getElementById('right-panel')
+              });
 
               map.controls[this.google.maps.ControlPosition.TOP_CENTER].push(bikeToggleDiv);
+
+              this.mapReady = true;
             });
           }
         }, 100);
+      },
+      addMarker() {
+        const marker = {
+          location: this.map.center,
+        };
+
+        this.directionsDisplay.addListener('directions_changed', () => {
+          console.log('updating directions');
+          this.storeWayPoints(this.directionsDisplay.getDirections());
+        });
+
+        this.markers.push(marker);
+        this.displayRoute();
+      },
+      displayRoute () {
+        if (this.markers.length < 2) return;
+
+        const params = {
+          origin: this.markers[0],
+          destination: this.markers[this.markers.length - 1],
+          travelMode: 'BICYCLING'
+        };
+
+        if (this.markers.length >= 3) {
+          params.waypoints = this.markers
+            .slice(1, this.markers.length - 2);
+        }
+
+        this.directionsService.route(params, (response, status) => {
+          if (status === 'OK') {
+            this.directionsDisplay.setDirections(response);
+          } else {
+            alert('Could not display directions due to: ' + status);
+          }
+        });
+      },
+      storeWayPoints(directions) {
+        this.markers.length = 0;
+        this.markers.push(directions.request.origin);
+
+        if (directions.request.waypoints) {
+          directions.request.waypoints.forEach(w => {
+            this.markers.push(w);
+          });
+        }
+
+        this.markers.push(directions.request.destination);
+      },
+      sauvegarderPlan() {
+
       }
     }
   }
@@ -158,7 +234,7 @@
 
     ctrl.showBikes = false;
 
-    container.addEventListener('click', function () {
+    container.addEventListener('click', () => {
       ctrl.showBikes = !ctrl.showBikes;
 
       if (ctrl.showBikes) {
