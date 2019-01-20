@@ -99,7 +99,7 @@ def logout():
     logout_user()
     return 'Logged out'
 
-@app.route('/ap/joingroup')
+@app.route('/ap/joingroup', methods=['GET'])
 @login_required
 def joinGroup():
     content = request.json   
