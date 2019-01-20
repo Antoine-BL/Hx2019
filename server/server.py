@@ -29,23 +29,23 @@ def user_loader(email):
     user.id = email
     return user
 
-@login_manager.request_loader
-def request_loader(request):
-    email = request.json['email']
-    with open('./database/users.json', 'r+') as file:
-        isGood = False
-        data = json.load(file)
-        for item in data :
-            if item['email'] == request.json['email'] and item['password'] == request.json['password']:
-                isGood = True
-        if not isGood:
-            return
+# @login_manager.request_loader
+# def request_loader(request):
+#     email = request.json['email']
+#     with open('./database/users.json', 'r+') as file:
+#         isGood = False
+#         data = json.load(file)
+#         for item in data :
+#             if item['email'] == request.json['email'] and item['password'] == request.json['password']:
+#                 isGood = True
+#         if not isGood:
+#             return
 
-    user = User()
-    user.id = email
-    user.is_authenticated = True
+#     user = User()
+#     user.id = email
+#     user.is_authenticated = True
 
-    return user
+#     return user
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
