@@ -99,7 +99,7 @@ def logout():
     logout_user()
     return 'Logged out'
 
-@app.route('/ap/joingroup', methods=['GET'])
+@app.route('/api/joingroup', methods=['POST'])
 @login_required
 def joinGroup():
     content = request.json   
@@ -109,7 +109,7 @@ def joinGroup():
         data = json.load(file)
         for group in data:
             if group['id'] == id:
-                data['members'].append(current_user.id)
+                group['members'].append(current_user.id)
                 file.seek(0)
                 json.dump(data, file)
                 file.truncate()

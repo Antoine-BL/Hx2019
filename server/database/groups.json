@@ -1,8 +1,1 @@
-[
-    {
-        "id": 1,
-        "creator": "antoine.brassard@gmail.com",
-        "members": [],
-        "date": "9/11/2001 10:20"
-    }
-]
+[{"id": 1, "creator": "antoine.brassard@gmail.com", "members": ["antoine.brassard@gmail.com"], "date": "9/11/2001 10:20"}]
