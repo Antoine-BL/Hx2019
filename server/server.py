@@ -109,6 +109,9 @@ def joinGroup():
         data = json.load(file)
         for group in data:
             if group['id'] == id:
+                for member in group['members']:
+                    if member == current_user.id :
+                        return 'already in group'
                 group['members'].append(current_user.id)
                 file.seek(0)
                 json.dump(data, file)
