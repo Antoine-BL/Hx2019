@@ -1,9 +1,12 @@
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask import Flask, render_template, request
 from os import getenv
+import subprocess
 import json
 import googleApi
 import datetime
+
+subprocess.check_call('npm run build --prefix "../app"', shell=True)
 
 app = Flask(__name__, static_folder = "./dist", template_folder = ".")
 app.secret_key = 'super secret string'
