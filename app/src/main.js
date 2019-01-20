@@ -14,9 +14,11 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
 import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar'
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons/faAddressCard'
 import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit'
+import { faMap } from '@fortawesome/free-solid-svg-icons/faMap'
+import { faWindowClose } from '@fortawesome/free-solid-svg-icons/faWindowClose'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faPlus, faCalendar, faAddressCard, faEdit);
+library.add(faPlus, faCalendar, faAddressCard, faEdit, faMap, faWindowClose);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

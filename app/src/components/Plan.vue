@@ -36,18 +36,42 @@
         </b-button>
       </div>
     </div>
-    <div class="row">
-      <GmapMap ref="mapRef"
-        :center="{lat:10, lng:10}"
-        :zoom="7"
-        map-type-id="terrain"
-        class="map">
-      </GmapMap>
+    <div v-if="showMap" class="row">
+      <div class="col">
+        <div class="row">
+          <div class="col d-flex align-items-end justify-content-end">
+            <b-button class="bg-transparent border-0 p-0">
+              <font-awesome-icon v-on:click="toggleMap" icon="window-close"/>
+            </b-button>
+          </div>
+        </div>
+        <div class="row py-0">
+          <GmapMap
+                   ref="mapRef"
+                   :center="{lat:10, lng:10}"
+                   :zoom="12"
+                   :options="mapOptions"
+                   map-type-id="terrain"
+                   class="map">
+          </GmapMap>
+        </div>
+      </div>
+    </div>
+    <div v-else class="row">
+      <div class="col d-flex justify-content-center">
+        <b-button class="circle-btn rounded-circle" v-on:click="toggleMap()" variant="light">
+          <font-awesome-icon icon="map"/>
+        </b-button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import {gmapApi} from 'vue2-google-maps'
+
+  let bikeLayer;
+
   export default {
     name: "plan",
     props: ["plan"],
@@ -55,15 +79,27 @@
       return {
         planData: this.plan,
         editingTitle: false,
+        showMap: false,
+        position: null,
+        mapOptions: {
+          mapTypeControl: false,
+          zoomControl: false,
+          fullscreenControl: false,
+        }
       }
     },
     mounted() {
       this.planData.dateCreation = new Date();
       this.planData.titre = 'Ceci est un titre';
-
-      this.$refs.mapRef.$mapPromise.then((map) => {
-        map.panTo({lat: 1.38, lng: 103.80})
-      })
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.position = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+      });
+    },
+    computed: {
+      google: gmapApi
     },
     methods: {
       confirmEdit(event) {
@@ -75,8 +111,62 @@
         if (this.editingTitle) {
           this.plan.titre = '';
         }
+      },
+      toggleMap() {
+        this.showMap = !this.showMap;
+
+        this.$forceUpdate();
+        setTimeout(() => {
+          if (this.showMap) {
+            this.$refs.mapRef.$mapPromise.then((map) => {
+              map.panTo(this.position);
+
+              bikeLayer = new this.google.maps.BicyclingLayer();
+              const bikeToggleDiv = document.createElement('div');
+              const bikeToggle = new BikeOverlayControl(bikeToggleDiv, map);
+
+              map.controls[this.google.maps.ControlPosition.TOP_CENTER].push(bikeToggleDiv);
+            });
+          }
+        }, 100);
       }
     }
+  }
+
+  function BikeOverlayControl(controlDiv, map, center) {
+    var ctrl = this;
+
+    ctrl.center_ = center;
+    controlDiv.style.clear = 'both';
+
+    var container = document.createElement('div');
+    container.id = 'toggleBikeButton';
+    container.title = 'Cliquer pour afficher ou cacher les pistes cyclables';
+    container.style.backgroundColor = '#fff';
+    container.style.border = '2px solid #fff';
+    container.style.borderRadius = '3px';
+    container.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+    container.style.cursor = 'pointer';
+    container.style.marginBottom = '22px';
+    container.style.textAlign = 'center';
+    controlDiv.appendChild(container);
+
+    var text = document.createElement('div');
+    text.id = 'toggleBikeText';
+    text.innerHTML  = 'Afficher pistes cyclables';
+    container.appendChild(text);
+
+    ctrl.showBikes = false;
+
+    container.addEventListener('click', function () {
+      ctrl.showBikes = !ctrl.showBikes;
+
+      if (ctrl.showBikes) {
+        bikeLayer.setMap(map);
+      } else {
+        bikeLayer.setMap(null);
+      }
+    });
   }
 </script>
 

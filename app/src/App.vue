@@ -13,6 +13,8 @@ export default {
   name: 'app',
   data () {
     return {
+      user: null,
+      groups: null,
     }
   },
   components: {
