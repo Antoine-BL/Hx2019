@@ -5,7 +5,7 @@ import json
 import googleApi
 
 app = Flask(__name__, static_folder = "./dist", template_folder = ".")
-app.secret_key = 'super secret string'  # Change this!
+app.secret_key = 'super secret string'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -94,7 +94,7 @@ def protected():
     return 'Logged in as: ' + current_user.id
 
 #logout
-@app.route("/api/logout")
+@app.route("/api/logout", methods=['POST'])
 def logout():
     logout_user()
     return 'Logged out'
@@ -116,6 +116,26 @@ def joinGroup():
                 return 'group joined'
 
     return 'error'
+    
+@app.route("/api/creategroup", methods=['POST'])
+@login_required
+def createGroup():
+    content = request.json
+    
+    with open('./database/groups.json', 'r+') as file:
+        data = json.load(file)
+        data.append({
+            "id": 2,
+            "creator": current_user(),
+            "members": [],
+            "date": content['date']
+        })
+        file.seek(0)
+        json.dump(data, file)
+        file.truncate()
+            
+    return 'group created'
+
 
 @app.route("/api/google/<string:lat>/<string:lon>", methods=['GET'])
 def google(lat, lon):
