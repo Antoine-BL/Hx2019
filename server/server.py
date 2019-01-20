@@ -3,6 +3,7 @@ from flask import Flask, render_template, request
 from os import getenv
 import json
 import googleApi
+import datetime
 
 app = Flask(__name__, static_folder = "./dist", template_folder = ".")
 app.secret_key = 'super secret string'
@@ -127,8 +128,9 @@ def createGroup():
     
     with open('./database/groups.json', 'r+') as file:
         data = json.load(file)
+        count = len(data)
         data.append({
-            "id": 2,
+            "id": count + 1,
             "creator": current_user.id,
             "members": [],
             "date": content['date']
@@ -154,6 +156,25 @@ def getmygroups():
                         myGroups.append(group)
             
     return json.dumps(myGroups)
+
+@app.route("/api/getgroups", methods=['GET'])
+def getGroups():
+    groups = []
+    with open('./database/groups.json', 'r+') as file:
+        data = json.load(file)
+        today = datetime.date(datetime.datetime.now().year, datetime.datetime.now().month, datetime.datetime.now().day)
+        todayTime = datetime.datetime.now().time()
+        for group in data :
+            dateTime = group['date'].split(' ')
+            dateData = dateTime[0].split('/')
+            date = datetime.date(int(dateData[0]), int(dateData[1]), int(dateData[2]))
+            timeData = dateTime[1].split(':')
+            time2 = datetime.time(hour=int(timeData[0]), minute=int(timeData[1]))
+
+            if today < date and todayTime < time2:
+                groups.append(group)
+    return json.dumps(groups)
+
 
 
 @app.route("/api/google/<string:lat>/<string:lon>", methods=['GET'])
