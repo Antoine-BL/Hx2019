@@ -109,14 +109,14 @@ def joinGroup():
         data = json.load(file)
         for group in data:
             if group['id'] == id:
-                data['members'].append('{'+id+'}')
+                data['members'].append(current_user.id)
                 file.seek(0)
                 json.dump(data, file)
                 file.truncate()
                 return 'group joined'
 
     return 'error'
-    
+
 @app.route("/api/creategroup", methods=['POST'])
 @login_required
 def createGroup():
