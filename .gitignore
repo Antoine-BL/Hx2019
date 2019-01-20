@@ -171,18 +171,4 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
-#====== NPM/Vue
-/node_modules
-/test/js
-/test/browsertest/js
-/test/fixtures/temp-cache-fixture
-/benchmark/js
-/benchmark/fixtures
-/examples/**/dist
-/coverage
-.DS_Store
-*.log
-.idea
-.vscode
-.eslintcache
-package-lock.json
+.idea/*

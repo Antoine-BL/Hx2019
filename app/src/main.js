@@ -5,14 +5,31 @@ import App from './App.vue'
 import SignUp from './pages/SignUp'
 import Login from './pages/Login'
 import Home from './pages/Home'
+import * as VueGoogleMaps from 'vue2-google-maps'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
+import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar'
+import { faAddressCard } from '@fortawesome/free-solid-svg-icons/faAddressCard'
+import { faEdit } from '@fortawesome/free-solid-svg-icons/faEdit'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faPlus, faCalendar, faAddressCard, faEdit);
+
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.use(BootStrapVue);
 Vue.use(VueRouter);
-
-importVueBootstrapComponents();
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyBBGhoFwL83uHNQwFta5pAI2gz9EFIZRtY' //Lol please no steal
+  }
+});
+Vue.filter('toFrCaDate', (date) =>{
+  return new Intl.DateTimeFormat('fr-CA').format(date);
+});
 
 const routes = [
   {
@@ -47,8 +64,3 @@ const app = new Vue({
   router: router,
   render: h => h(App),
 });
-
-function importVueBootstrapComponents() {
-
-}
-
