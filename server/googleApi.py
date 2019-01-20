@@ -17,9 +17,3 @@ class googleApi :
             'distance': self.getDistance(),
             'path': polyline.decode(self.json['routes'][0]['legs'][0]['steps'][1]['polyline']['points'])
         })
-
-
-google = googleApi('45.44289515059061,-73.76473903656006', '45.43191889517022,-73.6774706840515')
-print (google.resp.json())
-
-print (google.getData())
