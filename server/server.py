@@ -126,7 +126,7 @@ def createGroup():
         data = json.load(file)
         data.append({
             "id": 2,
-            "creator": current_user(),
+            "creator": current_user.id,
             "members": [],
             "date": content['date']
         })
