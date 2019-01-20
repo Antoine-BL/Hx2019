@@ -1,6 +1,8 @@
 <template>
 <b-navbar  toggleable toggle="md" type="dark" variant="dark">
-  <b-navbar-brand to="/">{{brandMsg}}</b-navbar-brand>
+  <b-navbar-brand to="/">
+    <img style="width: 112.5px; height:75px" src="../assets/logo.png"/>
+  </b-navbar-brand>
   <b-collapse is-nav id="nav_collapse">
     <b-navbar-nav class="text-light">
     </b-navbar-nav>

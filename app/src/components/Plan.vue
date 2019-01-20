@@ -71,9 +71,6 @@
     </div>
     <div class="row">
       <div class="col d-flex justify-content-center">
-        <b-button v-on:click="sauvegarderPlan" variant="success" class="circle-btn rounded-circle" v-on:click="toggleMap()" variant="light">
-          Sauvegarder
-        </b-button>
       </div>
     </div>
   </div>
@@ -203,11 +200,6 @@
         }
 
         this.markers.push(directions.request.destination);
-
-        this.polylines
-      },
-      sauvegarderPlan() {
-
       }
     }
   }
