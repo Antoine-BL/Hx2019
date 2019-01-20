@@ -8,6 +8,8 @@ import googleApi
 
 app = Flask(__name__, static_folder = "./dist", template_folder = ".")
 
+connection = pypyodbc.connect("Driver=SQL Server;Server=bdallovelo.c4hn4wmypuno.us-east-2.rds.amazonaws.com;Database=DBO;uid=PolyHxAlloVelo;pwd=2chocolats")
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
