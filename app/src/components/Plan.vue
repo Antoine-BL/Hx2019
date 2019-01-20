@@ -103,6 +103,7 @@
         directionsService: null,
         directionsDisplay: null,
         mapReady: false,
+        polylines: null,
       }
     },
     mounted() {
@@ -202,6 +203,8 @@
         }
 
         this.markers.push(directions.request.destination);
+
+        this.polylines
       },
       sauvegarderPlan() {
 
