@@ -99,6 +99,24 @@ def logout():
     logout_user()
     return 'Logged out'
 
+@app.route('/ap/joingroup', methods=['GET'])
+@login_required
+def joinGroup():
+    content = request.json   
+    id = content['id']
+
+    with open('./database/groups.json', 'r+') as file:
+        data = json.load(file)
+        for group in data:
+            if group['id'] == id:
+                data['members'].append('{'+id+'}')
+                file.seek(0)
+                json.dump(data, file)
+                file.truncate()
+                return 'group joined'
+
+    return 'error'
+    
 @app.route("/api/creategroup", methods=['POST'])
 @login_required
 def createGroup():
